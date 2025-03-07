@@ -94,28 +94,13 @@ function update(req, res) {
 // delete
 function destroy(req, res) {
     // trasformo l id in numero
-    const id = parseInt(req.params.id);
-
-    // cerco il post tramite l id
-    const post = posts.find(post => post.id === id);
-
-    // controllo se il post esiste
-    if (!post) {
-        // se il post non esiste ritorno questo stato
-        res.status(404);
-
-        return res.json({
-            status: 404,
-            error: "Not Found",
-            message: "Post non trovato"
-        });
-    }
-
-    // rimuovo il post dal array
-    posts.splice(posts.indexOf(post), 1);
-
-    // restituisce lo status corretto
-    res.sendStatus(204);
+    const { id } = req.params;
+    const sql = 'DELETE FROM posts WHERE id = ?'
+    //Eliminiamo la pizza dal menu
+    connection.query(sql, [id], (err) => {
+        if (err) return res.status(500).json({ error: 'Failed to delete posts' });
+        res.sendStatus(204)
+    });
 }
 // esportiamo tutto
 module.exports = { index, show, store, update, destroy }
