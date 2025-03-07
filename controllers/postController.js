@@ -5,19 +5,11 @@ const connection = require('../data/db');
 
 //index
 function index(req, res) {
-    // fake error per vedere se il middleware error funziona
-    // gotjgutjguti;
-    // l array filtrato corrisponde a quello originale
-    let filteredPost = posts;
-    // controllo se tags è presente e non è vuoto
-    if (req.query.tags) {
-        // filtro
-        filteredPost = posts.filter(
-            post => post.tags.includes(req.query.tags)
-        );
-    }
-    // mi restituisce un json
-    res.json(filteredPost);
+    const sql = 'SELECT * FROM posts';
+    connection.query(sql, (err, results) => {
+        if (err) return res.status(500).json({ error: 'Database query failed' });
+        res.json(results);
+    });
 }
 
 //show
